@@ -20,10 +20,12 @@
 npx skills add git@github.com:Being09/web-deck.git
 ```
 
-或者克隆项目到你的技能目录：
+或者克隆项目到你的技能目录（注意 skill 在 `skills/web-deck/` 子目录下）：
 
 ```bash
-git clone git@github.com:Being09/web-deck.git ~/.agents/skills/web-deck
+git clone git@github.com:Being09/web-deck.git
+# 复制 skill 子目录到 agent 的 skills 目录
+cp -r web-deck/skills/web-deck ~/.agents/skills/
 ```
 
 无需额外依赖——34 个模板和导航运行时（`deck-stage.js`）已全部内置在 `templates/` 目录。
@@ -76,20 +78,25 @@ skill 会按四步走：
 ## 目录结构
 
 ```
-web-deck/
-├── SKILL.md                  # skill 主指令（给 agent）
-├── README.md                 # 本文件（给人）
-├── LICENSE                   # MIT
+web-deck/                         # 仓库根
+├── README.md                     # 本文件（给人）
 ├── .gitignore
-├── templates/                # 34 套模板 + 索引 + 共享运行时
-│   ├── index.json
-│   ├── deck-stage.js
-│   └── <slug>/               # template.html + template.json + design.md
-└── references/               # 按需深读的领域文档
-    ├── design-principles.md  # 逻辑化 + 视觉化原则
-    ├── clone-adapt-guide.md  # 克隆 + 改内容 + 补布局细则
-    └── pitfalls.md           # 反 AI 模式 + CSS 陷阱
+└── skills/
+    └── web-deck/                 # skill 本体（给 agent）
+        ├── SKILL.md              # skill 主指令
+        ├── LICENSE               # MIT
+        ├── templates/            # 34 套模板 + 索引 + 共享运行时
+        │   ├── index.json
+        │   ├── deck-stage.js
+        │   └── <slug>/           # template.html + template.json + design.md
+        └── references/           # 按需深读的领域文档
+            ├── design-principles.md  # 逻辑化 + 视觉化原则
+            ├── clone-adapt-guide.md  # 克隆 + 改内容 + 补布局细则
+            └── pitfalls.md           # 反 AI 模式 + CSS 陷阱
 ```
+
+> [!note] 为什么 skill 在 `skills/web-deck/` 子目录而不是仓库根？
+> `npx skills` CLI 在 GitHub URL 安装时有个已知 bug：当 SKILL.md 位于仓库根目录时，会触发"单文件优化路径"，只装 SKILL.md 而丢弃 `references/`、`templates/` 等子目录。把 SKILL.md 放到 `skills/<name>/` 子目录后走标准安装路径，所有辅助文件才会被完整装上。参考 anthropics/skills 等官方仓库的目录结构。
 
 ## 适配平台
 
@@ -99,4 +106,4 @@ web-deck/
 
 ## License
 
-MIT —— 见 [LICENSE](LICENSE)。模板部分遵循原仓库 [beautiful-html-templates](https://github.com/zarazhangrui/beautiful-html-templates) 的 MIT 许可。
+MIT —— 见 [LICENSE](skills/web-deck/LICENSE)。模板部分遵循原仓库 [beautiful-html-templates](https://github.com/zarazhangrui/beautiful-html-templates) 的 MIT 许可。
