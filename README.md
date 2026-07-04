@@ -1,37 +1,36 @@
 # Web Deck
 
-一个 [ZCode](https://zcode.com) skill，用 HTML/CSS 制作网页版幻灯片。
+一个智能演示文稿生成技能，用 HTML/CSS 制作网页版幻灯片。
 
 **先逻辑后视觉**：以"逻辑化 + 视觉化"为指导原则，先帮你把演示文稿的逻辑骨架搭对（金字塔原理 / 故事结构），再用内置的 34 套漂亮 HTML 模板把骨架变得好看。**形式永远服务于功能。**
 
 ## 特性
 
 - 🧠 **逻辑化优先** —— 进入模板前，先对齐"意图 - 逻辑 - 边界 - 成功画面"。逻辑骨架没搭对，再好看的视觉也是空中楼阁。
-- 🎨 **34 套实体模板** —— 内置全部模板（vendor 进包），克隆即用、离线可用。覆盖 editorial / brutalism / retro / 极简 / 暖调 / 暗色等全谱系风格。
+- 🎨 **34 套实体模板** —— 内置全部模板，克隆即用、离线可用。覆盖 editorial / brutalism / retro / 极简 / 暖调 / 暗色等全谱系风格。
 - 🔧 **实体模板优先** —— 克隆现成模板改内容，不从零生成。质量稳定、忠于原作者设计。
 - 🖥️ **固定 16:9 舞台** —— 1920×1080 设计画布，整体缩放到视口，不按设备重排内容。
 - ✏️ **内联编辑** —— 生成的 deck 默认支持浏览器内直接改文字（hover 左上角或按 `E`）。
 
 ## 安装
 
-把本目录放到 ZCode skill 发现路径之一：
+使用 npx 安装：
 
 ```bash
-# 项目级（仅当前项目可用，优先级最高）
-cp -r web-deck <project>/.zcode/skills/
+npx skills add git@github.com:Being09/web-deck.git
+```
 
-# 或用户级（所有项目可用）
-cp -r web-deck ~/.zcode/skills/
+或者克隆项目到你的技能目录：
 
-# 或跨工具标准位置
-cp -r web-deck ~/.agents/skills/
+```bash
+git clone git@github.com:Being09/web-deck.git ~/.agents/skills/web-deck
 ```
 
 无需额外依赖——34 个模板和导航运行时（`deck-stage.js`）已全部内置在 `templates/` 目录。
 
 ## 使用
 
-在你的 ZCode 会话里直接说要做什么演示文稿，skill 会自动触发：
+在支持的 agent 平台里直接说要做什么演示文稿，skill 会自动触发：
 
 > "帮我做一个关于 [主题] 的演示文稿"
 > "我要做一个产品发布的 slides"
@@ -91,6 +90,12 @@ web-deck/
     ├── clone-adapt-guide.md  # 克隆 + 改内容 + 补布局细则
     └── pitfalls.md           # 反 AI 模式 + CSS 陷阱
 ```
+
+## 适配平台
+
+本 skill 适配支持 Skills 规范的 AI agent 平台，包括但不限于：
+- [Skills](https://github.com/skills/skills) - 通过 `npx skills add` 安装
+- 其他支持 Skills 兼容的 agent 框架
 
 ## License
 
