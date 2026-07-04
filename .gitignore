@@ -1,0 +1,15 @@
+# Skill 运行时产物
+.frontend-presentation/
+*.deck/
+
+# 经验日志（deep-intent-collaboration 落盘目录，本地用，不入库）
+.experience-log/
+
+# 探索 / 临时仓库（开发期克隆的参考仓库）
+_references/
+
+# 常见
+.DS_Store
+Thumbs.db
+node_modules/
+*.log
