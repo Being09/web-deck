@@ -1,5 +1,5 @@
 # Skill 运行时产物
-.frontend-presentation/
+.web-deck/
 *.deck/
 
 # 经验日志（deep-intent-collaboration 落盘目录，本地用，不入库）

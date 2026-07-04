@@ -1,6 +1,6 @@
-# Frontend Presentation
+# Web Deck
 
-一个 [ZCode](https://zcode.com) skill，用 frontend 方法制作 HTML 幻灯片。
+一个 [ZCode](https://zcode.com) skill，用 HTML/CSS 制作网页版幻灯片。
 
 **先逻辑后视觉**：以"逻辑化 + 视觉化"为指导原则，先帮你把演示文稿的逻辑骨架搭对（金字塔原理 / 故事结构），再用内置的 34 套漂亮 HTML 模板把骨架变得好看。**形式永远服务于功能。**
 
@@ -18,13 +18,13 @@
 
 ```bash
 # 项目级（仅当前项目可用，优先级最高）
-cp -r frontend-presentation <project>/.zcode/skills/
+cp -r web-deck <project>/.zcode/skills/
 
 # 或用户级（所有项目可用）
-cp -r frontend-presentation ~/.zcode/skills/
+cp -r web-deck ~/.zcode/skills/
 
 # 或跨工具标准位置
-cp -r frontend-presentation ~/.agents/skills/
+cp -r web-deck ~/.agents/skills/
 ```
 
 无需额外依赖——34 个模板和导航运行时（`deck-stage.js`）已全部内置在 `templates/` 目录。
@@ -77,7 +77,7 @@ skill 会按四步走：
 ## 目录结构
 
 ```
-frontend-presentation/
+web-deck/
 ├── SKILL.md                  # skill 主指令（给 agent）
 ├── README.md                 # 本文件（给人）
 ├── LICENSE                   # MIT

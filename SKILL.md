@@ -1,11 +1,11 @@
 ---
-name: frontend-presentation
+name: web-deck
 description: Use whenever 用户要做演示文稿 / presentation / slides / PPT、做演讲 / 汇报 / 分享幻灯片、想把内容或主题做成视觉化的网页幻灯片、或提到 deck / 幻灯片 / 演示 —— 即使用户没明说 "presentation" 或只给了主题还没给内容。覆盖中英文场景。
 ---
 
-# Frontend Presentation
+# Web Deck
 
-用 frontend 方法做 HTML 幻灯片。**先逻辑后视觉**——先用逻辑化原则帮用户搭对内容骨架，再用内置的 34 套实体模板把骨架变得好看。
+用 HTML/CSS 做网页版幻灯片。**先逻辑后视觉**——先用逻辑化原则帮用户搭对内容骨架，再用内置的 34 套实体模板把骨架变得好看。
 
 核心命题：**形式永远服务于功能**。视觉化是为了高效传达逻辑，不是为了好看而好看。
 
@@ -168,7 +168,7 @@ description: Use whenever 用户要做演示文稿 / presentation / slides / PPT
 1. 读该模板的 `template.html`，**只取第一张 slide**（封面/标题页）。
 2. **填入用户的真实内容**：Phase 1 确认的标题、副标题、作者、日期——让预览真实，不是占位。
 3. 保留模板完整设计系统（字体/色板/装饰/chrome）。
-4. 保存为自包含 HTML 到 `.frontend-presentation/previews/{a,b,c}.html`。
+4. 保存为自包含 HTML 到 `.web-deck/previews/{a,b,c}.html`。
 
 **骨架类型处理**（关键，两套骨架不兼容）：
 - 判定法：读 `template.html`，grep 是否含 `deck-stage`。
