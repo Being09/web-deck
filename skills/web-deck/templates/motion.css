@@ -1,0 +1,183 @@
+/**
+ * motion.css — web-deck entrance-animation stylesheet.
+ *
+ * Drop-in animation vocabulary for decks cloned from templates that don't
+ * already ship their own [data-anim] system. Author slides declaratively:
+ *
+ *   <h1 data-anim="fade-up" data-delay="0">Title</h1>
+ *   <p  data-anim="fade-in" data-delay="2">Subtitle</p>
+ *
+ * An element animates ONCE when its parent slide becomes active. Three frame
+ * skeletons are covered by a single selector list:
+ *   - Frame A:  <section data-deck-active>  (deck-stage web component)
+ *   - Frame B1: <section class="slide active">   (inline JS, opacity toggle)
+ *   - Frame B2: <section class="slide is-active"> (inline JS, strip translate)
+ *
+ * Two scroll-based templates (8-bit-orbit, daisy-days) never mark the slide,
+ * so motion.js stamps a synthetic `data-motion-on` attribute on the visible
+ * slide — that selector is included here too.
+ *
+ * The 5 templates that already ship [data-anim] (broadside, monochrome, grove,
+ * signal, studio) define the SAME keyframe names and [data-anim] convention.
+ * Those templates are NOT loaded with motion.css (avoids duplicate @keyframes);
+ * they work out of the box. motion.css mirrors their names so a slide authored
+ * against one travels cleanly to the others.
+ *
+ * All motion honors `prefers-reduced-motion` (see the media query at the end).
+ */
+
+/* ── Default state: every [data-anim] element starts invisible ───────────
+   It becomes visible only while its slide is active, via the fill-mode-forwards
+   keyframe below. Without active state it stays hidden — so off-screen slides
+   keep their content parked, ready to animate in on arrival. */
+[data-anim] {
+  opacity: 0;
+}
+
+/* ── Active-slide trigger (three frame skeletons + scroll fallback) ──────
+   When ANY of these marks the slide active, every [data-anim] descendant
+   runs its named keyframe once. */
+[data-deck-active] [data-anim],
+.slide.active [data-anim],
+.slide.is-active [data-anim],
+.slide[data-motion-on] [data-anim] {
+  animation-duration: var(--dur-enter, 0.6s);
+  animation-timing-function: var(--ease-enter, cubic-bezier(0.22, 0.61, 0.36, 1));
+  animation-fill-mode: forwards;
+}
+
+/* ── Animation type → keyframe (matches the 5 built-in templates) ─────── */
+[data-deck-active] [data-anim="fade-up"],
+.slide.active [data-anim="fade-up"],
+.slide.is-active [data-anim="fade-up"],
+.slide[data-motion-on] [data-anim="fade-up"] {
+  animation-name: kFadeUp;
+}
+[data-deck-active] [data-anim="fade-in"],
+.slide.active [data-anim="fade-in"],
+.slide.is-active [data-anim="fade-in"],
+.slide[data-motion-on] [data-anim="fade-in"] {
+  animation-name: kFadeIn;
+}
+[data-deck-active] [data-anim="reveal-right"],
+.slide.active [data-anim="reveal-right"],
+.slide.is-active [data-anim="reveal-right"],
+.slide[data-motion-on] [data-anim="reveal-right"] {
+  animation-name: kRevealRight;
+}
+[data-deck-active] [data-anim="reveal-left"],
+.slide.active [data-anim="reveal-left"],
+.slide.is-active [data-anim="reveal-left"],
+.slide[data-motion-on] [data-anim="reveal-left"] {
+  animation-name: kRevealLeft;
+}
+[data-deck-active] [data-anim="scale-in"],
+.slide.active [data-anim="scale-in"],
+.slide.is-active [data-anim="scale-in"],
+.slide[data-motion-on] [data-anim="scale-in"] {
+  animation-name: kScaleIn;
+}
+
+/* ── Extended types (not in the 5 built-in templates) ─────────────────── */
+
+/* kBlurIn — title resolves from soft focus into clarity. Good for cover /
+   section-divider headlines where "arrival" matters more than "motion". */
+[data-deck-active] [data-anim="blur-in"],
+.slide.active [data-anim="blur-in"],
+.slide.is-active [data-anim="blur-in"],
+.slide[data-motion-on] [data-anim="blur-in"] {
+  animation-name: kBlurIn;
+}
+
+/* kDrawLine — reveals an SVG stroke progressively, leading the eye along a
+   path. Apply to the <path>/<line>/<polyline> of flow diagrams, timelines,
+   and chart axes. Requires stroke + stroke-dasharray to be set on the element. */
+[data-deck-active] [data-anim="draw-line"],
+.slide.active [data-anim="draw-line"],
+.slide.is-active [data-anim="draw-line"],
+.slide[data-motion-on] [data-anim="draw-line"] {
+  animation-name: kDrawLine;
+}
+
+/* ── Stagger delays — add data-delay="N" to offset each element ──────────
+   Mirrors the rhythm used by the 5 built-in templates (0 / .08 / .18 / .3 /
+   .44 / .6 / .78s). Use small delays for tight groups (kicker→title), larger
+   ones to let the eye settle between major elements. */
+[data-delay="0"] { animation-delay: 0s; }
+[data-delay="1"] { animation-delay: 0.08s; }
+[data-delay="2"] { animation-delay: 0.18s; }
+[data-delay="3"] { animation-delay: 0.3s; }
+[data-delay="4"] { animation-delay: 0.44s; }
+[data-delay="5"] { animation-delay: 0.6s; }
+[data-delay="6"] { animation-delay: 0.78s; }
+
+/* ── Keyframes ─────────────────────────────────────────────────────────── */
+
+/* The first five match broadside/monochrome/grove/signal/studio verbatim
+   (same names, same values) so slides authored on one travel to any of them. */
+@keyframes kFadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes kFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes kRevealRight {
+  from { clip-path: inset(0 100% 0 0); opacity: 1; }
+  to   { clip-path: inset(0 0% 0 0);   opacity: 1; }
+}
+@keyframes kRevealLeft {
+  from { clip-path: inset(0 0 0 100%); opacity: 1; }
+  to   { clip-path: inset(0 0 0 0%);   opacity: 1; }
+}
+@keyframes kScaleIn {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Extended keyframes. */
+@keyframes kBlurIn {
+  from { opacity: 0; filter: blur(14px); transform: scale(1.04); }
+  to   { opacity: 1; filter: blur(0);    transform: none; }
+}
+/* kDrawLine drives the stroke-dashoffset from full length → 0. The element
+   must declare its own stroke-dasharray (e.g. stroke-dasharray: 1000); we set
+   a large fallback here so un-measured paths still reveal. */
+@keyframes kDrawLine {
+  from { stroke-dashoffset: var(--motion-dash, 1000); opacity: 1; }
+  to   { stroke-dashoffset: 0;                       opacity: 1; }
+}
+[data-anim="draw-line"] {
+  stroke-dasharray: var(--motion-dash, 1000);
+}
+
+/* ── CountUp: the element is filled by motion.js, but it must start hidden
+   and stay put (no transform) so the number doesn't jump layout. ───────── */
+[data-anim="count-up"] {
+  opacity: 0;
+}
+[data-deck-active] [data-anim="count-up"],
+.slide.active [data-anim="count-up"],
+.slide.is-active [data-anim="count-up"],
+.slide[data-motion-on] [data-anim="count-up"] {
+  animation-name: kFadeIn; /* reveal + motion.js swaps the digits */
+}
+
+/* ── Reduced motion: honor the user's preference ─────────────────────────
+   Entrance animations collapse to instant; elements still become visible
+   (they were opacity:0 by default), they just appear without traveling.
+   CountUp (motion.js) checks this separately and jumps to the final value. */
+@media (prefers-reduced-motion: reduce) {
+  [data-anim],
+  [data-deck-active] [data-anim],
+  .slide.active [data-anim],
+  .slide.is-active [data-anim],
+  .slide[data-motion-on] [data-anim] {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+  }
+}

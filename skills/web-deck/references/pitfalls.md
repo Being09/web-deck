@@ -39,6 +39,20 @@
 - ✅ 每个可见文字都是用户要传达的真实内容
 - ✅ chrome 只用真实 deck chrome：标题、日期、作者、页码
 
+### 动画
+
+动画是引导注意力的工具，不是装饰——遵守与"强调≤2 处"同源的信噪比原则。详见 [motion-guide.md](motion-guide.md)。
+
+- ❌ 每个元素都加 `[data-anim]`（强调泛滥 = 没强调，单张 ≤7 个）
+- ❌ 循环动画（`animation-iteration-count: infinite`）当常态——入场动画只播一次，循环闪烁/脉动是注意力杀手
+- ❌ 动画时长 >800ms（拖慢节奏）或 <200ms（突兀廉价）
+- ❌ 给纯装饰 chrome（页码、角标、垂直 mono 标签）加动画——它们本不该抢戏
+- ❌ 正文段落整块 `fade-up`——动画干扰阅读
+- ❌ 给自带动画的 5 个模板（broadside/monochrome/grove/signal/studio）重复引 motion.css——它们已有同名 keyframe，重复定义会冲突；这 5 个开箱即用
+- ✅ 入场一次、引导视线顺序（错峰 `data-delay`）
+- ✅ 强度对齐 Phase 1.3④（"轻"只用 fade-up/fade-in）
+- ✅ 动画是增强不是依赖——静态下内容必须完整可见
+
 ---
 
 ## 二、CSS 陷阱（会让浏览器静默失败）
@@ -106,7 +120,7 @@ left: calc(-1 * min(100px, 10vw));                /* ✅ */
   }
 }
 ```
-模板通常已内置；补缺失布局时如果加了新动画，记得加这条。
+模板通常已内置；补缺失布局时如果加了新动画，记得加这条。引入 [motion.css](../templates/motion.css) 的 deck 已含针对 `[data-anim]` 的全局 reduced-motion 兜底（动画置 none、元素置可见），无需重复加；但模板自带的过渡动画（slide 切换 opacity 等）仍需各自有这条。
 
 ---
 

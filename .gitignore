@@ -8,6 +8,10 @@
 # 探索 / 临时仓库（开发期克隆的参考仓库）
 _references/
 
+# 工具临时产物（Playwright MCP 日志/快照、ZCode 会话缓存）
+.playwright-mcp/
+.zcode/
+
 # 常见
 .DS_Store
 Thumbs.db

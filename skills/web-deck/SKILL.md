@@ -18,6 +18,7 @@ description: Use whenever 用户要做演示文稿 / presentation / slides / PPT
 5. **固定 16:9 舞台** —— 1920×1080 设计画布，整体缩放到视口，**不按设备 reflow 内容**。手机上也是 16:9 letterbox。
 6. **渐进式披露** —— 先读轻量索引 `templates/index.json` 选候选，只读选中那一个模板的 `design.md`。不 bulk-read。
 7. **诉求合理 ≠ 在当前模板上改** —— 用户想要"更现代""更科技感"等诉求往往合理，但**正确解法是回 Phase 2 重选原生匹配的模板，不是在 Phase 3 破坏已选模板的设计系统**（换字体/改色 = 废掉模板身份）。详见下方"用户要改字体/配色怎么办"。
+8. **动画引导注意力，不为装饰** —— 适度入场动画帮观众跟随节奏、缓解纯静态的注意力疲劳，但**每个动画都要回答"它在帮传达什么逻辑"**。循环骚扰、处处都动 = 注意力破坏，等同装饰泛滥。动画强度由 Phase 1.3 与用户对齐，**默认"轻"**（仅关键 slide 的标题/主数据入场）。详见 [references/motion-guide.md](references/motion-guide.md)。
 
 ---
 
@@ -107,7 +108,7 @@ description: Use whenever 用户要做演示文稿 / presentation / slides / PPT
 
 ### 1.3 边界（Constraints）
 
-三个子维度，逐个确认（可并入一次结构化提问）：
+四个子维度，逐个确认（可并入一次结构化提问）：
 
 **① 深度边界 —— 密度模式**（影响每张字数、留白、slide 数）：
 
@@ -122,6 +123,17 @@ description: Use whenever 用户要做演示文稿 / presentation / slides / PPT
 > "这个 deck 里，有哪些是你明确不想碰的？哪些必须包含？"（用户可答"没限制"，但必须答）
 
 **③ 技术边界**：是否要配图、目标语言（中文/英文/中英混排，影响模板字体选择）、目标场合（正式/轻松，影响 formality 匹配）。
+
+**④ 动画强度**（影响 Phase 3 是否引入 motion.css/motion.js、给哪些元素加 `[data-anim]`）：默认"轻"。用结构化提问给四档，一句话说明各档适用场景（详见 [references/motion-guide.md](references/motion-guide.md) 强度表）：
+
+| 强度 | 适合 | 行为 |
+|------|------|------|
+| **关** | 纯静态报告、无障碍优先、打印分发 | 无任何动画 |
+| **轻**（默认） | 大多数演讲/汇报 | 仅关键 slide（封面/章节/数据/结尾）的标题+主数据入场 |
+| **适度** | 产品发布、提案、需节奏感的分享 | + 流程图描边、对比项错峰、引用浮现 |
+| **丰富** | 创意/品牌/科技感、keynote 风 | 多数 slide 有节奏入场（仍守每元素一次、不循环骚扰）|
+
+验收：用户明确选定一档（含"关"）。**强度对齐密度**：低密度/演讲主导天然配"轻/适度"；高密度/阅读优先通常配"关/轻"（密集内容 + 动画 = 干扰扫读）。
 
 ### 1.4 成功画面（Success Criteria）
 
@@ -139,7 +151,7 @@ description: Use whenever 用户要做演示文稿 / presentation / slides / PPT
 > "确认协作锚点：
 > - **意图**：[一句话]
 > - **逻辑**：[outline 结构 + N 张]
-> - **边界**：[密度 / 范围 / 技术各一句]
+> - **边界**：[密度 / 范围 / 技术 / 动画强度各一句]
 > - **成功画面**：[可观察完成态]
 > 对吗？对的话我开始选模板。"
 
@@ -222,13 +234,44 @@ description: Use whenever 用户要做演示文稿 / presentation / slides / PPT
 
 按 Phase 1 的 outline 把内容映射到合适的 slide layout。
 
-### 3.4 增删 slide
+### 3.4 应用动画（按 Phase 1.3④ 的强度）
+
+**① 若强度 = "关"，跳过本节**——不加任何动画文件、不给元素加 `[data-anim]`，纯静态交付。
+
+**② 判定模板是否自带动画**（决定要不要引 motion.css/motion.js）：5 个 Frame B2 模板（broadside / monochrome / grove / signal / studio）**已自带** `[data-anim]` 系统（开箱即有动画）。其余 29 个模板没有，需引入运行时。
+
+- **自带动画的模板** → **不引 motion.css/motion.js**（避免 keyframe 重复定义）。直接用模板自带的 `[data-anim]`，按强度增删属性即可。
+- **其余模板** → 在 `<head>` 引 `<link rel="stylesheet" href="motion.css">`，在 deck 标记后引 `<script src="motion.js"></script>`。motion.js 自动嗅探骨架（Frame A 监听 slidechange、Frame B1 监听 class 变化、scroll 异类用 IntersectionObserver 兜底），无需手配。
+
+**③ 按强度 + slide 类型加 `[data-anim]`**。对照 [references/motion-guide.md](references/motion-guide.md) 的"slide 类型→动画映射"表，给对应元素加 `data-anim="<类型>"` + `data-delay="<0-6>"`。示例（封面，轻强度）：
+```html
+<h1 data-anim="fade-up" data-delay="0">主标</h1>
+<p  data-anim="fade-in" data-delay="2">副标</p>
+```
+
+**动画六问（每个 `[data-anim]` 都要过）**——呼应 Core Principle 8"形式服务功能"：
+1. 它在帮传达什么？（答不出 → 删）
+2. 是关键 slide 吗？（非关键 → 轻强度下不加）
+3. 是标题/数据/结构元素吗？（正文段落/装饰 chrome → 不加）
+4. 错峰合理吗？（同组相邻 delay、不同组跳档）
+5. 强度对齐 Phase 1.3④ 吗？（"轻"只用 fade-up/fade-in）
+6. 单张 `[data-anim]` 元素 ≤7 个？（超过就是噪音）
+
+**CountUp 数字滚动**（适度/丰富强度，强调关键统计值）：
+```html
+<div class="stat-value" data-anim="count-up"
+     data-count-to="142" data-count-suffix="%">0%</div>
+```
+
+**Frame B1 注入点**（仅 B1 + 引 motion.js 时）：在该模板内联导航脚本的切换逻辑里，`classList.add('active')` 前加 `WebDeckMotion.replay(slideEl);`。不注入也能工作（motion.js 有 MutationObserver 兜底），但显式注入更可靠。
+
+### 3.5 增删 slide
 
 - **多于 demo**：复制最接近 layout 的 `<section>` 整块，改内容，更新所有页码 `NN / TT`。
 - **少于 demo**：从末尾删，更新页码。
 - **缺某种 layout**（如下一节）。
 
-### 3.5 补缺失布局（遵循"六同"）
+### 3.6 补缺失布局（遵循"六同"）
 
 当 outline 需要模板没有的 layout（如要对比表，模板只有 process-flow）：**默认按该模板 design.md 的设计系统从零补一张 `<section>`**。不引入新视觉语言，不跨模板拼。
 
@@ -250,12 +293,13 @@ description: Use whenever 用户要做演示文稿 / presentation / slides / PPT
 
 注意：换模板 ≠ 混模板。换是"整套替换"，不是"A 模板的 slide + B 模板的 slide 拼一起"。
 
-### 3.6 验证（NON-NEGOTIABLE）
+### 3.7 验证（NON-NEGOTIABLE）
 
 生成完，**必须验证**：
 1. 浏览器打开，截图检查 **1280×720 + 一个手机视口**。
 2. 检查：内容不溢出卡片、面板不重叠、字体加载成功、导航（键盘/点击）正常。
 3. `scrollHeight` 检查不够——grid 面板可能视觉上互相覆盖，要肉眼看截图。
+4. **动画验证**（仅强度 ≠ "关" 时）：① 入场动画播放正常；② 导航回访 slide 时动画**重播**（不卡在终态）；③ 开 `prefers-reduced-motion` 后动画正确禁用、内容仍完整可见；④ CountUp 数字滚动到正确终值；⑤ 单张 `[data-anim]` 元素 ≤7 个（多于则砍）。
 
 **内联编辑**（默认含，不在 Phase 1 问）：hover 左上角或按 `E` 进编辑模式，点任意文字可改，`Ctrl+S` 保存。借鉴自 frontend-slides，是 draft 后的自然增强。
 
@@ -269,6 +313,7 @@ description: Use whenever 用户要做演示文稿 / presentation / slides / PPT
    - `:root` CSS 变量改配色
    - 字体 `<link>` 改 typography
    - 内联编辑模式直接改文字
+   - 动画：元素加/删 `data-anim="<类型>"` 开关入场动画、调 `data-delay="<0-6>"` 改错峰、改 `:root` 的 `--dur-enter`/`--ease-enter` 调节奏（详见 motion-guide.md）
 4. **不叙述每一步**。用户要的是产物 + 路径 + 一句话理由，不是流程流水账。
 
 ---
@@ -292,6 +337,9 @@ description: Use whenever 用户要做演示文稿 / presentation / slides / PPT
 | `templates/<slug>/template.json` | 单模板完整元数据（含 palette/typography/navigation）| Phase 3 深入某模板时 |
 | `templates/<slug>/design.md` | 设计系统文档（components/typography/spacing + Layout/Shapes）| Phase 3.1 补缺失布局时 |
 | [templates/deck-stage.js](templates/deck-stage.js) | 共享导航 web component（骨架A 模板引用）| 骨架A 模板预览/生成时 |
-| [references/design-principles.md](references/design-principles.md) | 逻辑化 + 视觉化原则，原则→slide 类型映射 | Phase 1.2 搭逻辑 + Phase 3.5 映射布局 |
+| [references/design-principles.md](references/design-principles.md) | 逻辑化 + 视觉化原则，原则→slide 类型映射 | Phase 1.2 搭逻辑 + Phase 3.6 映射布局 |
 | [references/clone-adapt-guide.md](references/clone-adapt-guide.md) | 克隆+改内容+补布局的操作细则（六同规则）| Phase 3 生成全程 |
-| [references/pitfalls.md](references/pitfalls.md) | 反 AI 模式清单 + CSS 陷阱 | Phase 3 全程 |
+| [references/motion-guide.md](references/motion-guide.md) | 动画强度四级 + 何时该动/不该动 + slide 类型→`[data-anim]` 映射 + 反模式 | Phase 1.3④ 选强度 + Phase 3.4 加动画 |
+| [templates/motion.css](templates/motion.css) | 入场动画样式表（8 keyframe + `[data-anim]`/`data-delay` 词汇 + 三骨架触发选择器）| Phase 3.4 引入动画时（非自带动画模板）|
+| [templates/motion.js](templates/motion.js) | 动画运行时（重播控制 + scroll 异类兜底 + CountUp 数字滚动）| Phase 3.4 引入动画时（非自带动画模板）|
+| [references/pitfalls.md](references/pitfalls.md) | 反 AI 模式清单 + CSS 陷阱（含动画反模式）| Phase 3 全程 |
